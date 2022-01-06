@@ -20,7 +20,7 @@ function App() {
     draggable: true,
   });
 
-  const { active, account, library, connector, activate, deactivate, network } = useWeb3React();
+  const { active, account, library, connector, activate, deactivate } = useWeb3React();
 
   async function connectWallet() {
     setLoadingWallet(true)
@@ -32,11 +32,10 @@ function App() {
       setLoadingWallet(false);
     }
   }
-
   async function transferToken(e) {
     e.preventDefault();
     setIsLoadingTransferToken(true);
-    //0xBd5C5e901FF45f7BC6922703f28eb09deA050278
+
     try {
       if (typeof window.ethereum !== 'undefined') {
         const signer = library.getSigner();

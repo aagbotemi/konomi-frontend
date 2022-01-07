@@ -13,3 +13,8 @@ npx hardhat node
 node scripts/sample-script.js
 npx hardhat help
 ```
+
+#Commands to start the application
+1. After forking and cloning this repository
+2. In the project directory run: `npm install` to install the required libraries.
+3. To run the app in the development mode: `npm start`. Open http://localhost:3000 to view it in the browser.

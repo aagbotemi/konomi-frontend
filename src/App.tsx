@@ -61,52 +61,53 @@ function App() {
       {!address ? (
         <div className="flex flex-col justify-center items-center he__ro w-100 mx-auto">
           <ConnectionButton />
-
         </div>
       ) : (
         <div className="text-grey flex flex-col justify-center items-center he__ro w-100 mx-auto">
           <div className="border border-blue_deep p-12 rounded">
-          <h3 className="text-3xl md:text-4xl font-medium text-center">
-            KONOMI Transfer <br />
-            <span className="text-lg font-normal">
+            <h3 className="text-3xl md:text-4xl font-medium text-center">
+              KONOMI Transfer
+            </h3>
+            <p className="text-lg leading-tight font-normal my-2 text-center">
               Transfer your Token here.
-            </span>
-          </h3>
+            </p>
 
-          <form className="mt-3" onSubmit={handleSubmit}>
-            <div className="mt-2 form-field">
-              <label className="md:hidden">Address</label>
-              <input
-                onChange={(e: any) => setReceiverAccount(e.target.value)}
-                placeholder=" "
-                autoFocus
-                className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
-                disabled={loadingTransfer}
+            <form className="mt-5" onSubmit={handleSubmit}>
+              <div className="mt-2 form-field">
+                <label className="md:hidden">Address</label>
+                <input
+                  onChange={(e: any) => setReceiverAccount(e.target.value)}
+                  placeholder=" "
+                  autoFocus
+                  className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
+                  disabled={loadingTransfer}
                 />
-                <label className="hidden md:block text-blue_deep">Address</label>
-            </div>
+                <label className="hidden md:block text-blue_deep">
+                  Address
+                </label>
+              </div>
 
-            <div className="form-field mt-7">
-              <label className="md:hidden">Amount</label>
-              <input
-                type={"number"}
-                onChange={(e: any) => setAmount(e.target.value)}
-                placeholder=" "
-                className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
-                disabled={loadingTransfer}
-              />
-              <label className="hidden md:block text-blue_deep">Amount</label>
-            </div>
-            <p className="">Make sure you have Konomi Token [KNT]</p>
+              <div className="form-field mt-7">
+                <label className="md:hidden">Amount</label>
+                <input
+                  type={"number"}
+                  onChange={(e: any) => setAmount(e.target.value)}
+                  placeholder=" "
+                  className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
+                  disabled={loadingTransfer}
+                />
+                <label className="hidden md:block text-blue_deep">Amount</label>
+              </div>
+              <p className="">Make sure you have Konomi Token [KNT]</p>
 
-            <div className="mt-4">
-              <LoadingBtn
-                loading={loadingTransfer}
-                loadingCopy={"Loading..."}
-                copy={"Transfer"}
-              />
-            </div>
-          </form>
+              <div className="mt-4">
+                <LoadingBtn
+                  loading={loadingTransfer}
+                  loadingCopy={"Loading..."}
+                  copy={"Transfer"}
+                />
+              </div>
+            </form>
           </div>
         </div>
       )}

@@ -7,6 +7,7 @@ import reportWebVitals from "./reportWebVitals";
 import { WagmiConfig, createClient, chain } from "wagmi";
 import { ConnectKitProvider, getDefaultClient } from "connectkit";
 import MaterialToastContainer from "./components/core/MaterialToastContainer";
+import 'animate.css';
 
 const alchemyId = process.env.ALCHEMY_ID;
 

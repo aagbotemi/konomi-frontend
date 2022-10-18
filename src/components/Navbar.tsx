@@ -66,7 +66,7 @@ const Navbar = () => {
       </div>
       {isOpen && (
         <div
-        className="absolute right-0 top-0 bg-purple_dark w-[80%] h-screen z-50"
+        className="animate__animated animate__fadeInRight absolute right-0 top-0 bg-purple_dark w-[80%] h-screen z-50"
         style={{ zIndex: "9999" }}
         >
           <AiOutlineClose

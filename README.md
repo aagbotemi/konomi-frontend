@@ -27,7 +27,7 @@ The NIIt protocol was built on the Olympus pro protocol model. The protocol enco
 
 ### Open new terminal window and clone this repository
 ```
-git clone https://github.com/aagbotemi/konomi-dapp.git
+git clone https://github.com/aagbotemi/konomi-frontend.git
 ```
 <!-- 
 #### Install dependencies

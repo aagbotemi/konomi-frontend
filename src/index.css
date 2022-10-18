@@ -2,4 +2,56 @@
 @tailwind components;
 @tailwind utilities;
 
+*, ::before, ::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
+body {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.nav__bar {
+  backdrop-filter: blur(13px)!important;
+  background-color: #0000001d;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.105);
+}
+
+.he__ro {
+  min-height: calc(100vh - 61px);
+}
+
+
+@media only screen and (min-width: 768px) {
+  .he__ro {
+    min-height: calc(100vh - 73px);
+  }
+  
+  .form-field {
+    position:relative;
+  }
+  
+  label {
+    padding:13px;
+    pointer-events: none;
+    position:absolute;
+    left:0;
+    top:0;
+    transition: 0.2s;
+    transition-timing-function: ease;
+    transition-timing-function: cubic-bezier(0.25, 0.1, 0.25, 1);
+    opacity:0.5;
+    background: transparent;
+  }
+  
+  input:focus + label, input:not(:placeholder-shown) + label {
+    opacity:1;
+    background-color: #fff;
+    padding:4px;
+    font-weight: 600;
+    transform: scale(0.75) translateY(-65%) translateX(-2px);
+  }
+ 
+}

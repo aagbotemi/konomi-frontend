@@ -2,8 +2,8 @@ import { ethers } from "ethers";
 import { toast } from "material-react-toastify";
 import React, { Fragment, useEffect, useState } from "react";
 import { AiOutlineClose, AiOutlineMenu } from "react-icons/ai";
-import { useAccount, useContractWrite } from "wagmi";
-import { ERC20_CONTRACT } from "../config";
+import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
+import { DIAMOND_CONTRACT } from "../config";
 import { LoadingContent, SuccessContent } from "./core/AlertContent";
 import BaseButton from "./core/BaseButton";
 import ConnectionButton from "./core/ConnectionButton";
@@ -14,26 +14,35 @@ const Navbar = () => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
 
   const {
+    data: mintTokenData,
     isError: errorMintToken,
-    isSuccess: successMintToken,
     isLoading: loadingMintToken,
     write: mintToken,
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    ...ERC20_CONTRACT,
+    ...DIAMOND_CONTRACT,
     functionName: "mint",
     args: [ethers.utils.parseEther("1000")],
   });
 
+  const { isLoading: isLoadingTxnWait } = useWaitForTransaction({
+    hash: mintTokenData?.hash,
+    onSuccess(data) {
+      console.log('Success', data)
+      toast(<SuccessContent message={"Minted 1000 KNT successfully!"} />);
+    },
+    onError(error) {
+      toast.error("Encountered an error", { autoClose: false });
+    },
+  })
+
   useEffect(() => {
     if (errorMintToken) {
       toast.error("Encountered an error", { autoClose: false });
-    } else if (successMintToken) {
-      toast(<SuccessContent message={"Minted 1000 KNT successfully!"} />);
     } else if (loadingMintToken) {
       toast(<LoadingContent message={"Minting 1000 KNT!"} />);
     }
-  }, [loadingMintToken, errorMintToken, successMintToken]);
+  }, [loadingMintToken, errorMintToken]);
 
 
   return (
@@ -48,7 +57,7 @@ const Navbar = () => {
             <div className="mr-5">
               <LoadingBtn
                 onClick={mintToken}
-                loading={loadingMintToken}
+                loading={loadingMintToken || isLoadingTxnWait}
                 loadingCopy={"Loading..."}
                 copy={"Mint"}
               />
@@ -79,9 +88,9 @@ const Navbar = () => {
             {address && (
               <div className="mb-4">
                 <BaseButton
-                  disabled={loadingMintToken}
+                  disabled={loadingMintToken || isLoadingTxnWait}
                   className="bg-blue text-white px-16 py-3 rounded-lg font-bold"
-                  text="Mint"
+                  text={(loadingMintToken || isLoadingTxnWait) ? "Loading..." : "Mint"}
                   onClick={mintToken}
                 />
               </div>

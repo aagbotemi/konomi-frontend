@@ -1,10 +1,10 @@
 import { ethers } from "ethers";
 import { useContractWrite, usePrepareContractWrite } from "wagmi";
-import { ERC20_CONTRACT } from "../config";
+import { DIAMOND_CONTRACT } from "../config";
 
 export const useERC20Write = (functionName = "", amount) => {
   const { config } = usePrepareContractWrite({
-    ...ERC20_CONTRACT,
+    ...DIAMOND_CONTRACT,
     functionName,
     // overrides: {
     //   value: ethers.utils.parseEther(value ? value?.toString() : "0"),

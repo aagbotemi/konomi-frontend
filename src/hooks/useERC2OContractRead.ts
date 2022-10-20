@@ -1,9 +1,9 @@
 import { useContractRead } from "wagmi";
-import { ERC20_CONTRACT } from "../config";
+import { DIAMOND_CONTRACT } from "../config";
 
 export const useERC20Read = (functionName = "") => {
   const { data, isError, isLoading } = useContractRead({
-    ...ERC20_CONTRACT,
+    ...DIAMOND_CONTRACT,
     functionName,
   });
 

@@ -25,14 +25,14 @@ const root = ReactDOM.createRoot(
   document.getElementById("root") as HTMLElement
 );
 root.render(
-  <React.StrictMode>
+  // <React.StrictMode>
   <WagmiConfig client={client}>
     <MaterialToastContainer />
     <ConnectKitProvider theme="midnight" mode="dark">
       <App />
     </ConnectKitProvider>
   </WagmiConfig>
-  </React.StrictMode>
+  // </React.StrictMode>
 );
 
 // If you want to start measuring performance in your app, pass a function

@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import { useAccount, useContractWrite } from "wagmi";
+import { useAccount, useContractWrite, useWaitForTransaction } from "wagmi";
 import { ethers } from "ethers";
-import { ERC20_CONTRACT } from "./config";
+import { DIAMOND_CONTRACT, DIAMOND_CONTRACT_ADDRESS } from "./config";
 import { LoadingContent, SuccessContent } from "./components/core/AlertContent";
 import { toast } from "material-react-toastify";
 import Navbar from "./components/Navbar";
 import LoadingBtn from "./components/core/LoadingBtn";
 import ConnectionButton from "./components/core/ConnectionButton";
+import { CopyToClipboard } from "react-copy-to-clipboard";
+import { AiFillCopy, AiOutlineCopy } from "react-icons/ai";
 
 function App() {
   const [amount, setAmount] = useState<string>("");
@@ -14,13 +16,13 @@ function App() {
   const { address } = useAccount();
 
   const {
+    data: dataTransfer,
     isError: transferError,
-    isSuccess: successTransfer,
     isLoading: loadingTransfer,
     write: transferToken,
   } = useContractWrite({
     mode: "recklesslyUnprepared",
-    ...ERC20_CONTRACT,
+    ...DIAMOND_CONTRACT,
     functionName: "transfer",
     args: [
       receiverAccount,
@@ -28,19 +30,27 @@ function App() {
     ],
   });
 
-  useEffect(() => {
-    if (transferError) {
-      toast.error("Encountered an error", { autoClose: false });
-    } else if (loadingTransfer) {
-      toast(<LoadingContent message={`Transferring ${amount} KNT!`} />);
-    } else if (successTransfer) {
+  const { isLoading: isLoadingTxnWait } = useWaitForTransaction({
+    hash: dataTransfer?.hash,
+    onSuccess(data) {
       toast(
         <SuccessContent message={`Transferred ${amount} KNT successfully!`} />
       );
       setAmount("");
       setReceiverAccount("");
+    },
+    onError(error) {
+      toast.error("Encountered an error", { autoClose: false });
+    },
+  })
+
+  useEffect(() => {
+    if (transferError) {
+      toast.error("Encountered an error", { autoClose: false });
+    } else if (loadingTransfer || isLoadingTxnWait) {
+      toast(<LoadingContent message={`Transferring ${amount} KNT!`} />);
     }
-  }, [transferError, successTransfer, loadingTransfer, amount]);
+  }, [transferError, loadingTransfer, amount, isLoadingTxnWait]);
 
   const handleSubmit = (e: any) => {
     e.preventDefault();
@@ -54,6 +64,17 @@ function App() {
     transferToken();
   };
 
+
+  const [copy, setCopy] = useState(false);
+
+  useEffect(() => {
+    if (copy) {
+      setTimeout(() => {
+        setCopy(false);
+      }, 3000);
+    }
+  }, [copy]);
+
   return (
     <div className="font-mono bg-blue_dark relative">
       <Navbar />
@@ -64,6 +85,23 @@ function App() {
         </div>
       ) : (
         <div className="text-grey flex flex-col justify-center items-center he__ro w-100 mx-auto">
+          <div className="text-xl mb-2">
+          Contract Address:
+          {DIAMOND_CONTRACT_ADDRESS.substring(0, 6).concat("...")}
+              {DIAMOND_CONTRACT_ADDRESS.slice(-6)}
+          <CopyToClipboard
+                text={DIAMOND_CONTRACT_ADDRESS}
+                onCopy={() => setCopy(true)}
+              >
+                <button>
+                  {copy ? (
+                    <AiFillCopy className="ml-2" color="teal" />
+                  ) : (
+                    <AiOutlineCopy className="ml-2" />
+                  )}
+                </button>
+              </CopyToClipboard>
+        </div>
           <div className="border border-blue_deep p-12 rounded">
             <h3 className="text-3xl md:text-4xl font-medium text-center">
               KONOMI Transfer
@@ -78,9 +116,10 @@ function App() {
                 <input
                   onChange={(e: any) => setReceiverAccount(e.target.value)}
                   placeholder=" "
+                  value={receiverAccount}
                   autoFocus
                   className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
-                  disabled={loadingTransfer}
+                  disabled={loadingTransfer || isLoadingTxnWait}
                 />
                 <label className="hidden md:block text-blue_deep">
                   Address
@@ -91,10 +130,11 @@ function App() {
                 <label className="md:hidden">Amount</label>
                 <input
                   type={"number"}
+                  value={amount}
                   onChange={(e: any) => setAmount(e.target.value)}
                   placeholder=" "
                   className="w-full border p-3 text-grey_dark border-blue_deep focus:outline-none rounded"
-                  disabled={loadingTransfer}
+                  disabled={loadingTransfer || isLoadingTxnWait}
                 />
                 <label className="hidden md:block text-blue_deep">Amount</label>
               </div>
@@ -102,7 +142,7 @@ function App() {
 
               <div className="mt-4">
                 <LoadingBtn
-                  loading={loadingTransfer}
+                  loading={loadingTransfer || isLoadingTxnWait}
                   loadingCopy={"Loading..."}
                   copy={"Transfer"}
                 />
